@@ -1,0 +1,30 @@
+{
+  "seed": 42,
+  "C": 1.0,
+  "max_features": 10000,
+  "ngram_max": 2,
+  "results": [
+    {
+      "model_name": "LogisticRegression",
+      "accuracy": 0.9212880143112702,
+      "macro_f1": 0.9210945759376136,
+      "train_time": 0.40358686447143555
+    },
+    {
+      "model_name": "MultinomialNB",
+      "accuracy": 0.9355992844364938,
+      "macro_f1": 0.9352324758574758,
+      "train_time": 0.00411224365234375
+    },
+    {
+      "model_name": "LinearSVC",
+      "accuracy": 0.9230769230769231,
+      "macro_f1": 0.9231785393965994,
+      "train_time": 0.0741281509399414
+    }
+  ],
+  "best_model": "MultinomialNB",
+  "best_val_accuracy": 0.9355992844364938,
+  "best_val_macro_f1": 0.9352324758574758,
+  "checkpoint": "outputs\\checkpoints\\best_model_MultinomialNB_f1_0.9352.joblib"
+}
