@@ -56,6 +56,19 @@ newsgroup-text-classifier/
 └── .gitignore
 ```
 
+## Results
+
+Best model: **Multinomial Naive Bayes** (selected by validation macro-F1)
+
+| Metric | Validation | Test |
+|--------|-----------|------|
+| Accuracy | 93.56% | 93.79% |
+| Macro F1 | 0.9352 | 0.9378 |
+
+Train-test accuracy gap: 4.1% (no significant overfitting).
+
+Top confusion pair: `sci.space -> sci.med` (9 errors) — both categories share medical/scientific vocabulary.
+
 ## Environment
 
 - Python 3.10+
