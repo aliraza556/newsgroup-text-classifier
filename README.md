@@ -29,8 +29,17 @@ pip install -r requirements.txt
 # Train (compares 3 models, saves best checkpoint)
 python -m src.train --lr 1.0 --max_features 10000 --ngram_max 2
 
-# Evaluate on test set (confusion matrix + error analysis)
+# Evaluate on test set (confusion matrix + learning curve + error analysis)
 python -m src.evaluate
+
+# Predict on custom text
+python -m src.predict "NASA launched a new satellite into orbit"
+
+# Predict with built-in examples (one per category)
+python -m src.predict
+
+# Interactive prediction mode
+python -m src.predict --interactive
 
 # Run unit tests
 python -m pytest tests/ -v
@@ -44,13 +53,15 @@ newsgroup-text-classifier/
 │   ├── __init__.py
 │   ├── preprocess.py             # Data loading, cleaning, TF-IDF vectorization
 │   ├── train.py                  # Training loop with model comparison
-│   └── evaluate.py               # Test evaluation, confusion matrix, error analysis
+│   ├── evaluate.py               # Test evaluation, confusion matrix, learning curve, error analysis
+│   └── predict.py                # Interactive prediction CLI with confidence scores
 ├── tests/                        # Unit tests
-│   └── test_data.py              # Tests for data pipeline integrity
+│   ├── test_data.py              # Tests for data pipeline integrity
+│   └── test_predict.py           # Tests for prediction module
 ├── outputs/                      # Generated artifacts
 │   ├── checkpoints/              # Saved model checkpoints (.joblib)
 │   ├── logs/                     # Experiment logs (JSON)
-│   └── figures/                  # Plots (confusion matrix, etc.)
+│   └── figures/                  # Plots (confusion matrix, learning curve)
 ├── requirements.txt              # Python dependencies (pip)
 ├── README.md
 └── .gitignore
@@ -68,6 +79,21 @@ Best model: **Multinomial Naive Bayes** (selected by validation macro-F1)
 Train-test accuracy gap: 4.1% (no significant overfitting).
 
 Top confusion pair: `sci.space -> sci.med` (9 errors) — both categories share medical/scientific vocabulary.
+
+### Prediction Example
+
+```
+$ python -m src.predict "NASA launched a new satellite into orbit around Mars"
+
+  Input:      nasa launched a new satellite into orbit around mars
+  Prediction: sci.space
+  Confidence: 97.2%
+  Class probabilities:
+    sci.space                 0.972 #############################
+    sci.med                   0.016
+    rec.sport.baseball        0.007
+    talk.politics.guns        0.005
+```
 
 ## Environment
 

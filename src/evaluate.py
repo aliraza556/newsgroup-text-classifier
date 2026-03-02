@@ -25,6 +25,40 @@ CHECKPOINT_DIR = os.path.join("outputs", "checkpoints")
 FIGURES_DIR = os.path.join("outputs", "figures")
 
 
+def plot_learning_curve(model, X_train, y_train, X_test, y_test, n_points=8):
+    """Plot training and test accuracy as a function of training set size."""
+    from sklearn.base import clone
+
+    train_sizes = np.linspace(0.1, 1.0, n_points)
+    train_scores = []
+    test_scores = []
+
+    for frac in train_sizes:
+        n = max(10, int(frac * X_train.shape[0]))
+        idx = np.random.choice(X_train.shape[0], n, replace=False)
+        m = clone(model)
+        m.fit(X_train[idx], y_train[idx])
+        train_scores.append(accuracy_score(y_train[idx], m.predict(X_train[idx])))
+        test_scores.append(accuracy_score(y_test, m.predict(X_test)))
+
+    actual_sizes = [max(10, int(f * X_train.shape[0])) for f in train_sizes]
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(actual_sizes, train_scores, "o-", label="Train", color="#2196F3")
+    plt.plot(actual_sizes, test_scores, "s-", label="Test", color="#FF5722")
+    plt.xlabel("Training Set Size")
+    plt.ylabel("Accuracy")
+    plt.title("Learning Curve")
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    os.makedirs(FIGURES_DIR, exist_ok=True)
+    fig_path = os.path.join(FIGURES_DIR, "learning_curve.png")
+    plt.savefig(fig_path, dpi=150)
+    plt.close()
+    print(f"Saved: {fig_path}")
+
+
 def error_analysis(y_true, y_pred, texts, target_names, vectorizer, model):
     """Identify and analyze misclassified examples."""
     misclassified_idx = np.where(y_true != y_pred)[0]
@@ -137,6 +171,9 @@ def main():
         print("Warning: possible overfitting (gap > 5%)")
     else:
         print("No significant overfitting observed.")
+
+    # Learning curve: accuracy vs training set size
+    plot_learning_curve(model, X_train_tfidf, y_train_clean, X_test_tfidf, y_test_clean)
 
 
 if __name__ == "__main__":
