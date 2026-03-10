@@ -87,7 +87,11 @@ Best model: **Multinomial Naive Bayes** (selected by validation macro-F1)
 
 Train-test accuracy gap: 4.1% (no significant overfitting).
 
-Top confusion pair: `sci.space -> sci.med` (9 errors) — both categories share medical/scientific vocabulary.
+Top confusion pair: `sci.space → sci.med` (9 errors) — both categories share medical/scientific vocabulary.
+
+### Confusion Matrix
+
+![Confusion Matrix](outputs/figures/confusion_matrix.png)
 
 ### Prediction Example
 
@@ -106,17 +110,37 @@ $ python -m src.predict "NASA launched a new satellite into orbit around Mars"
 
 ## Explainability Dashboard
 
-Run `python -m src.explainability` to generate the full interpretability suite:
+Run `python -m src.explainability` to generate the full interpretability suite.
 
-| Visualisation | What it reveals |
-|---|---|
-| **Per-class feature importance** | Top discriminative words per category — shows *what* the model learns |
-| **t-SNE document embedding** | 2-D scatter of TF-IDF vectors — reveals cluster separation and overlap |
-| **Confidence calibration curve** | Predicted probability vs actual accuracy — measures model trustworthiness |
-| **Multi-metric radar chart** | Compares LR, NB, SVM across accuracy, F1, precision, recall, speed |
-| **Feature overlap heatmap** | Vocabulary similarity between categories — explains confusion pairs |
+### Per-Class Feature Importance
 
-All figures are saved to `outputs/figures/` as publication-quality PNGs (150 DPI).
+Shows the top discriminative words for each category — revealing *what* the model actually learns.
+
+![Feature Importance](outputs/figures/feature_importance.png)
+
+### t-SNE Document Embedding
+
+Projects 10,000-dimensional TF-IDF vectors onto 2-D, revealing how documents naturally cluster by topic.
+
+![t-SNE Embedding](outputs/figures/tsne_embedding.png)
+
+### Confidence Calibration Curve
+
+Reliability diagram comparing the model's predicted probability against actual accuracy — measures whether the model's confidence can be *trusted*.
+
+![Calibration Curve](outputs/figures/calibration_curve.png)
+
+### Model Comparison Radar Chart
+
+Compares Logistic Regression, Naive Bayes, and Linear SVM across accuracy, F1, precision, recall, and speed simultaneously.
+
+![Model Comparison](outputs/figures/model_comparison_radar.png)
+
+### Feature Overlap Heatmap
+
+Shows vocabulary similarity between categories — high overlap explains *why* certain category pairs are confused more often.
+
+![Feature Overlap](outputs/figures/feature_overlap_heatmap.png)
 
 ## Environment
 
