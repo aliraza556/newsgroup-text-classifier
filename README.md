@@ -14,6 +14,7 @@ Uses a 4-class subset of the [20 Newsgroups](http://qwone.com/~jason/20Newsgroup
 1. **Preprocessing**: lowercase, remove near-empty docs, TF-IDF vectorization (fit on train only to avoid data leakage)
 2. **Model selection**: compare Logistic Regression, Multinomial NB, Linear SVM on validation macro-F1
 3. **Evaluation**: confusion matrix, per-class precision/recall, concrete error analysis with feature attribution
+4. **Explainability**: t-SNE embeddings, confidence calibration, per-class feature importance, model comparison radar chart, and feature overlap analysis
 
 ## Reproducibility
 
@@ -41,6 +42,12 @@ python -m src.predict
 # Interactive prediction mode
 python -m src.predict --interactive
 
+# Generate explainability dashboard (all 5 visualisations)
+python -m src.explainability
+
+# Generate only the t-SNE embedding plot
+python -m src.explainability --tsne_only
+
 # Run unit tests
 python -m pytest tests/ -v
 ```
@@ -54,14 +61,16 @@ newsgroup-text-classifier/
 │   ├── preprocess.py             # Data loading, cleaning, TF-IDF vectorization
 │   ├── train.py                  # Training loop with model comparison
 │   ├── evaluate.py               # Test evaluation, confusion matrix, learning curve, error analysis
-│   └── predict.py                # Interactive prediction CLI with confidence scores
+│   ├── predict.py                # Interactive prediction CLI with confidence scores
+│   └── explainability.py         # Model interpretability dashboard (t-SNE, calibration, radar chart)
 ├── tests/                        # Unit tests
 │   ├── test_data.py              # Tests for data pipeline integrity
-│   └── test_predict.py           # Tests for prediction module
+│   ├── test_predict.py           # Tests for prediction module
+│   └── test_explainability.py    # Tests for explainability module
 ├── outputs/                      # Generated artifacts
 │   ├── checkpoints/              # Saved model checkpoints (.joblib)
 │   ├── logs/                     # Experiment logs (JSON)
-│   └── figures/                  # Plots (confusion matrix, learning curve)
+│   └── figures/                  # Plots (confusion matrix, learning curve, explainability)
 ├── requirements.txt              # Python dependencies (pip)
 ├── README.md
 └── .gitignore
@@ -94,6 +103,20 @@ $ python -m src.predict "NASA launched a new satellite into orbit around Mars"
     rec.sport.baseball        0.007
     talk.politics.guns        0.005
 ```
+
+## Explainability Dashboard
+
+Run `python -m src.explainability` to generate the full interpretability suite:
+
+| Visualisation | What it reveals |
+|---|---|
+| **Per-class feature importance** | Top discriminative words per category — shows *what* the model learns |
+| **t-SNE document embedding** | 2-D scatter of TF-IDF vectors — reveals cluster separation and overlap |
+| **Confidence calibration curve** | Predicted probability vs actual accuracy — measures model trustworthiness |
+| **Multi-metric radar chart** | Compares LR, NB, SVM across accuracy, F1, precision, recall, speed |
+| **Feature overlap heatmap** | Vocabulary similarity between categories — explains confusion pairs |
+
+All figures are saved to `outputs/figures/` as publication-quality PNGs (150 DPI).
 
 ## Environment
 
